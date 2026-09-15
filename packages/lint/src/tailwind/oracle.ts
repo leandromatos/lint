@@ -220,11 +220,14 @@ async function build(cssFile: string): Promise<Loaded> {
     base: dir,
     async loadStylesheet(id, base) {
       if (/^(?:https?:|data:)/.test(id)) return { base, content: "" }
-      const file = resolveStylesheet(base, id)
+      const resolved = resolveStylesheet(base, id)
       // Refusing to judge beats judging against half a theme.
-      if (!file) {
+      if (!resolved) {
         throw new Error(`@import "${id}" could not be resolved from ${base}`)
       }
+      // Under pnpm a package is a link into the store, and its own
+      // dependencies live beside the real file, not beside the link.
+      const file = fs.realpathSync.native(resolved)
       files.push(file)
       return {
         base: path.dirname(file),

@@ -19,3 +19,4 @@ plans/
 
 dist-next/
 !packages/lint/test/fixtures/project/node_modules/
+!packages/lint/test/fixtures/project/node_modules/.pnpm/*/node_modules/

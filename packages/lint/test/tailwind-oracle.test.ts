@@ -40,6 +40,20 @@ describe("tailwind oracle", () => {
     })
   })
 
+  test("follows a linked package's imports from where it really lives", async () => {
+    // linked-kit is a symlink into a pnpm-style store; kit-font is
+    // installed beside the real package and nowhere else.
+    const answer = await query(path.join(PROJECT, "app/linked.css"), [
+      "kit-frame",
+    ])
+    expect(answer).toEqual({
+      ok: true,
+      generation: expect.any(Number),
+      hasModules: false,
+      unknown: [],
+    })
+  })
+
   test("names the misspelled utility or variant", async () => {
     const answer = await query(CSS, [
       "flex-cols",
